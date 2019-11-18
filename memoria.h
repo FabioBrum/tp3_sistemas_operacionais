@@ -4,15 +4,15 @@
 
 typedef struct {
     unsigned frame;
-    int flagLoaded;
-    int flagDirty;
+    int flagCarregado;
+    int flagSuja;
     int flagSegundaChance;
     unsigned clockCarregado;
     long int clockAcesso;
 } Pagina;
 
 typedef struct {
-	short   preenchido;
+	int flagPreenchido;
 	unsigned	pagina;
 } Frame;
 
@@ -25,10 +25,10 @@ typedef struct {
 typedef struct {
     unsigned memoriaTamanho;        //tamanho da memoria em kb
     unsigned qteFrames;			//numero de frames total da memoria
-    unsigned qteFramesOcupados;    //quantidade de frames preenchidos no momento
+    unsigned qteFramesOcupados;    //quantidade de frames flagPreenchidos no momento
     unsigned paginasLidas;          //numero de paginas lidas
     unsigned paginasEscritas;       //numero de paginas que foram escritas
-    unsigned paginasASerEscritas;   //paginas flagDirtys que devem ser regravadas no disco
+    unsigned paginasASerEscritas;   //paginas flagSujas que devem ser regravadas no disco
     unsigned clock;               //contador de acessos da memoria
     Frame *frames;				//frames da memoria
 } Memoria;
@@ -49,4 +49,4 @@ unsigned fifo(Memoria *memoria, TabelaPaginas *tabela);
 
 unsigned lru(Memoria *memoria, TabelaPaginas *tabela);
 
-void libera_frame_preenchido(Memoria *memoria, TabelaPaginas *tabela, unsigned frame);
+void libera_frame_flagPreenchido(Memoria *memoria, TabelaPaginas *tabela, unsigned frame);

@@ -23,10 +23,10 @@ void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *a
         index = obter_pagina(addr, s);
 
         if(!feof(arq)) {
-			//se a pagina ja esta flagLoaded entao faca o acesso normalmente
-			if(tabela->paginas[index].flagLoaded == 1) {
+			//se a pagina ja esta flagCarregado entao faca o acesso normalmente
+			if(tabela->paginas[index].flagCarregado == 1) {
 				if(rw == 'W') {
-                    tabela->paginas[index].flagDirty = 1;
+                    tabela->paginas[index].flagSuja = 1;
                     tabela->paginas[index].flagSegundaChance = 1;
                 }
 
@@ -54,15 +54,15 @@ void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *a
                         printf("Tecnica de respoicao nao conhecida");
                 }
 
-				// liberar o frame se tiver preenchido
-                if(memoria->frames[frame].preenchido)
-				    libera_frame_preenchido(memoria, tabela, frame);
+				// liberar o frame se tiver flagPreenchido
+                if(memoria->frames[frame].flagPreenchido)
+				    libera_frame_flagPreenchido(memoria, tabela, frame);
         
 				//carregue a pagina no frame
 				carrega_pagina(memoria, tabela, index, frame);
 
                 if(rw == 'W') 
-                    tabela->paginas[index].flagDirty = 1;
+                    tabela->paginas[index].flagSuja = 1;
 			}
 		}
     }
@@ -75,7 +75,7 @@ unsigned fifo(Memoria *memoria, TabelaPaginas *tabela) {
     if(memoria->qteFramesOcupados < memoria->qteFrames)
         return retorna_frame_livre(memoria);
 
-    //se estiver cheia entao escolhe frame com pagina flagLoaded a mais tempo
+    //se estiver cheia entao escolhe frame com pagina flagCarregado a mais tempo
     for(i = 0; i < memoria->qteFrames; i++) {
         idx = memoria->frames[i].pagina;
         if(tabela->paginas[idx].clockCarregado < menorTempo) {
@@ -94,7 +94,7 @@ unsigned segunda_chance(Memoria *memoria, TabelaPaginas *tabela) {
     if(memoria->qteFramesOcupados < memoria->qteFrames)
         return retorna_frame_livre(memoria);
 
-    //se estiver cheia entao escolhe frame com pagina flagLoaded a mais tempo
+    //se estiver cheia entao escolhe frame com pagina flagCarregado a mais tempo
     for(i = 0; i < memoria->qteFrames; i++) {
         idx = memoria->frames[i].pagina;
         if(tabela->paginas[idx].clockCarregado < menorTempo) {

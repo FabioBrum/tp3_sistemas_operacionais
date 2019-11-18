@@ -12,4 +12,4 @@ void carrega_pagina(Memoria *memoria, TabelaPaginas *tabela, unsigned pagina, un
 
 unsigned retorna_frame_livre(Memoria *memoria);
 
-void libera_frame_preenchido(Memoria *memoria, TabelaPaginas *tabela, unsigned frame);
+void libera_frame_flagPreenchido(Memoria *memoria, TabelaPaginas *tabela, unsigned frame);
