@@ -17,19 +17,19 @@ typedef struct {
 } Frame;
 
 typedef struct {
-    Pagina  *paginas;         //vetor de paginas
-    unsigned   qtePaginas;       //tamanho do vetor
-    unsigned    tamanhoDasPaginas;   //tamanho das paginas em kb
+    Pagina  *paginas;
+    unsigned   qtePaginas;
+    unsigned    tamanhoDasPaginas;
 } TabelaPaginas;
 
 typedef struct {
-    unsigned memoriaTamanho;        //tamanho da memoria em kb
-    unsigned qteFrames;			//numero de frames total da memoria
-    unsigned qteFramesOcupados;    //quantidade de frames flagPreenchidos no momento
-    unsigned paginasLidas;          //numero de paginas lidas
-    unsigned paginasASerEscritas;   //paginas flagSujas que devem ser regravadas no disco
-    unsigned clock;               //contador de acessos da memoria
-    Frame *frames;				//frames da memoria
+    unsigned memoriaTamanho;
+    unsigned qteFrames;
+    unsigned qteFramesOcupados;
+    unsigned paginasLidas;
+    unsigned paginasASerEscritas;
+    unsigned clock;
+    Frame *frames;
 } Memoria;
 
 void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *arq);

@@ -17,21 +17,15 @@ void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *a
 		s++;
 	}
 
-    //ler cada linha do arquivo de arq
     while(!feof(arq)) {
         fscanf(arq, "%x %c", &addr, &rw);
         index = obter_pagina(addr, s);
 
         if(!feof(arq)) {
-			//se a pagina ja esta flagCarregado entao faca o acesso normalmente
-			if(tabela->paginas[index].flagCarregado == 1) {
-				if(rw == 'W') {
-                    tabela->paginas[index].flagSuja = 1;
-                }
-
+			if(tabela->paginas[index].flagCarregado == 1) { // caso a pagina ja esteja carregada, iremos acessar normalmente
                 tabela->paginas[index].flagSegundaChance = 1;
 				tabela->paginas[index].clockAcesso = memoria->clock;
-			} else { //se a pagina nao esta na memoria entao aloque um frame para a mesma
+			} else { // caso contrario, deveremos encontrar um quadro para ela
 				memoria->paginasLidas++;
 
                 // uma vez que a quantidade de letras do algoritmo é diferente, podemos
@@ -53,16 +47,13 @@ void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *a
                         printf("Tecnica de respoicao nao conhecida");
                 }
 
-				// liberar o frame se tiver flagPreenchido
                 if(memoria->frames[frame].flagPreenchido)
 				    libera_frame_flagPreenchido(memoria, tabela, frame);
         
-				//carregue a pagina no frame
 				carrega_pagina(memoria, tabela, index, frame);
-
-                if(rw == 'W') 
-                    tabela->paginas[index].flagSuja = 1;
 			}
+            if(rw == 'W') 
+                tabela->paginas[index].flagSuja = 1;
 		}
     }
 }
@@ -71,10 +62,10 @@ unsigned fifo(Memoria *memoria, TabelaPaginas *tabela) {
     unsigned menorTempo = UINT_MAX, frameVitima = 0, idx;
     int i = 0;
     
+    // se a memoria nao estiver cheia, retornaremos o primeiro frame encontrado
     if(memoria->qteFramesOcupados < memoria->qteFrames)
         return retorna_frame_livre(memoria);
 
-    //se estiver cheia entao escolhe frame com pagina flagCarregado a mais tempo
     for(i = 0; i < memoria->qteFrames; i++) {
         idx = memoria->frames[i].pagina;
         if(tabela->paginas[idx].clockCarregado < menorTempo) {
@@ -90,10 +81,10 @@ unsigned segunda_chance(Memoria *memoria, TabelaPaginas *tabela) {
     unsigned menorTempo = UINT_MAX, frameVitima = 0, idx;
     int i = 0;
     
+    // se a memoria nao estiver cheia, retornaremos o primeiro frame encontrado
     if(memoria->qteFramesOcupados < memoria->qteFrames)
         return retorna_frame_livre(memoria);
 
-    //se estiver cheia entao escolhe frame com pagina flagCarregado a mais tempo
     for(i = 0; i < memoria->qteFrames; i++) {
         idx = memoria->frames[i].pagina;
         if(tabela->paginas[idx].clockCarregado < menorTempo) {
@@ -115,10 +106,10 @@ unsigned lru(Memoria *memoria, TabelaPaginas *tabela) {
     unsigned menorTempo = UINT_MAX, frameVitima = 0, idx;
 	int i = 0;
 
-    if(memoria->qteFramesOcupados < memoria->qteFrames)
+    // se a memoria nao estiver cheia, retornaremos o primeiro frame encontrado
+    if(memoria->qteFramesOcupados < memoria->qteFrames) 
         return retorna_frame_livre(memoria);
 
-    //se estiver cheia entao escolhe frame com pagina que foi usada a mais tempo
     for(i = 0; i < memoria->qteFrames; i++) {
         idx = memoria->frames[i].pagina;
         if(tabela->paginas[idx].clockAcesso < menorTempo) {

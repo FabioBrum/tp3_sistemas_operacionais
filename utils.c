@@ -27,7 +27,7 @@ void inicializa_memoria(Memoria *memoria, int paginaTamanho, int memoriaTamanho)
     int i = 0;
 
     memoria->memoriaTamanho = memoriaTamanho;
-    memoria->qteFrames = memoriaTamanho / paginaTamanho;
+    memoria->qteFrames = (memoriaTamanho / paginaTamanho);
     memoria->qteFramesOcupados = 0;
     memoria->paginasLidas = 0;
     memoria->paginasASerEscritas = 0;
@@ -56,7 +56,6 @@ void carrega_pagina(Memoria *memoria, TabelaPaginas *tabela, unsigned pagina, un
 unsigned retorna_frame_livre(Memoria *memoria) {
     int i = 0;
 
-    //se a memoria nao estiver cheia aloca o primeiro frame livre
     for(i = 0; i < memoria->qteFrames; i++) {
         if(memoria->frames[i].flagPreenchido == 0)
             return i;
@@ -69,7 +68,6 @@ void libera_frame_flagPreenchido(Memoria *memoria, TabelaPaginas *tabela, unsign
     if(tabela->paginas[pagina].flagSuja == 1) 
         memoria->paginasASerEscritas++;
 
-    //atualizar informacoes da tabela
     tabela->paginas[pagina].flagCarregado = 0;
     tabela->paginas[pagina].flagSuja = 0;
     tabela->paginas[pagina].flagSegundaChance = 0;
@@ -77,7 +75,6 @@ void libera_frame_flagPreenchido(Memoria *memoria, TabelaPaginas *tabela, unsign
     tabela->paginas[pagina].clockCarregado = -1;
     tabela->paginas[pagina].frame = 0;
 
-    //atualizar informacoes da memoria
     memoria->frames[frame].flagPreenchido = 0;
     memoria->frames[frame].pagina = 0;
 
