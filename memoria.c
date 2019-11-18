@@ -103,6 +103,7 @@ unsigned segunda_chance(Memoria *memoria, TabelaPaginas *tabela) {
                 menorTempo = tabela->paginas[idx].clockCarregado;
             } else {
                 tabela->paginas[idx].flagSegundaChance = 0;
+                tabela->paginas[idx].clockCarregado = memoria->clock; // faz parecer que a pagina foi recém carregada
                 i = 0;
             }
         }
