@@ -5,7 +5,7 @@
 #include "memoria.h"
 #include "utils.h"
 
-void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *arq){
+void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *arq) {
     unsigned addr;
     char rw;
     unsigned s = 0, frame, index;
@@ -16,7 +16,7 @@ void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *a
 		tmp = tmp >> 1;
 		s++;
 	}
-    
+
     //ler cada linha do arquivo de arq
     while(!feof(arq)) {
         fscanf(arq, "%x %c", &addr, &rw);
@@ -27,9 +27,9 @@ void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *a
 			if(tabela->paginas[index].flagCarregado == 1) {
 				if(rw == 'W') {
                     tabela->paginas[index].flagSuja = 1;
-                    tabela->paginas[index].flagSegundaChance = 1;
                 }
 
+                tabela->paginas[index].flagSegundaChance = 1;
 				tabela->paginas[index].clockAcesso = memoria->clock;
 			} else { //se a pagina nao esta na memoria entao aloque um frame para a mesma
 				memoria->paginasLidas++;
@@ -47,8 +47,7 @@ void simulador(Memoria *memoria, TabelaPaginas *tabela, char *algoritmo, FILE *a
                         frame = fifo(memoria, tabela);
                         break;
                     case 6: // CASO 4: RANDOM
-                        srand(time(NULL));
-	                    frame = (rand() % memoria->qteFrames);
+	                    frame = aleatorio(memoria);
                         break;
                     default:
                         printf("Tecnica de respoicao nao conhecida");
@@ -129,4 +128,9 @@ unsigned lru(Memoria *memoria, TabelaPaginas *tabela) {
     }
     
     return frameVitima;
+}
+
+unsigned aleatorio(Memoria *memoria) {
+    srand(time(NULL));
+	return (rand() % memoria->qteFrames);
 }

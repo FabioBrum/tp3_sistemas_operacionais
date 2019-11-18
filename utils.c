@@ -30,7 +30,6 @@ void inicializa_memoria(Memoria *memoria, int paginaTamanho, int memoriaTamanho)
     memoria->qteFrames = memoriaTamanho / paginaTamanho;
     memoria->qteFramesOcupados = 0;
     memoria->paginasLidas = 0;
-    memoria->paginasEscritas = 0;
     memoria->paginasASerEscritas = 0;
     memoria->clock = 0;
     memoria->frames = (Frame *) malloc(memoria->qteFrames * sizeof(Frame) );
